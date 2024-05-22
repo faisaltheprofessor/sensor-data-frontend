@@ -1,7 +1,6 @@
 "use client"
 import React, { useState, useEffect } from 'react';
 import { TableHeader, TableRow, TableHead, TableBody, TableCell, Table } from './ui/table';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 import Pagination from './pagination';
 
 const SensorData = () => {

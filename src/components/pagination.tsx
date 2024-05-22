@@ -14,7 +14,7 @@ interface Props {
   action: CallableFunction;
 }
 
-const Pagination = ({ next, previous, first, last, perPage, totalPages, currentPage, action }: Props) => {
+const Pagination = ({ perPage, totalPages, currentPage, action }: Props) => {
 
   const handlePageChange = (pageNumber: number) => {
     if (pageNumber < 1 || pageNumber > totalPages) return; // Prevent out-of-bounds navigation
