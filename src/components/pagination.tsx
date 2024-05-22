@@ -1,6 +1,7 @@
 import React from 'react';
 import { ArrowLeftToLineIcon, ArrowRightToLineIcon, ChevronLeftIcon, ChevronRightIcon } from 'lucide-react';
 import { Button } from './ui/button';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 
 interface Props {
   next?: string;
@@ -24,9 +25,30 @@ const Pagination = ({ next, previous, first, last, perPage, totalPages, currentP
   const isLastPage = currentPage === totalPages;
 
   return (
-    <div className="flex items-center justify-around px-2 mt-4">
+    <div className="flex items-center justify-around px-2 mt-4 pb-12">
       <div className="flex items-center space-x-6 lg:space-x-8">
         <div className="flex items-center space-x-2">
+        <div className="flex items-center space-x-2">
+                    <p className="text-sm font-medium">Rows per page</p>
+                    <Select
+                        value={`${perPage}`}
+                        onValueChange={(value) => {
+                            action(value, 1);
+                        }}
+                    >
+                        <SelectTrigger className="h-8 w-[70px]">
+                            <SelectValue placeholder="selecting" />
+                        </SelectTrigger>
+                        <SelectContent side="top">
+                            {[10, 20, 30, 40, 50, 100].map((pageSize) => (
+                                <SelectItem key={pageSize} value={`${pageSize}`}>
+                                    {pageSize}
+                                </SelectItem>
+                            ))}
+                        </SelectContent>
+                    </Select>
+                </div>
+
           {/* Button for first page */}
           <Button
             variant="outline"
