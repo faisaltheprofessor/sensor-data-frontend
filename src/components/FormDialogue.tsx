@@ -10,6 +10,8 @@ import {
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { TimePicker, TimePickerInput } from "./time-picker"
+import { DateTimePicker } from "./date-time-picker"
 
 export function FormDialogue() {
   return (
@@ -44,6 +46,13 @@ export function FormDialogue() {
               placeholder="10"
               className="col-span-3"
             />
+          </div>
+
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="timestamp" className="text-right">
+              Timestamp
+            </Label>
+            <DateTimePicker />
           </div>
         </div>
         <DialogFooter>
