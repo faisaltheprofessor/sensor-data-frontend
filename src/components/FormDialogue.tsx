@@ -12,13 +12,18 @@ import {
 import { SensorDataForm } from "./SensorDataForm"
 
 
-export function FormDialogue() {  
+export function FormDialogue() {
+  const closeDialog = () => {
+    document.getElementById('closeDialog')?.click();
+  }
   return (
     <Dialog>
-    <DialogTrigger asChild>
+    <DialogTrigger asChild id="closeDialog">
       <Button variant="outline">Create</Button>
     </DialogTrigger>
-    <DialogContent className="sm:max-w-[425px]">
+    <DialogContent className="sm:max-w-[425px]" onInteractOutside={(e) => {
+          e.preventDefault();
+        }}>
       <DialogHeader>
         <DialogTitle>Store sensor data</DialogTitle>
         <DialogDescription>
@@ -26,7 +31,7 @@ export function FormDialogue() {
         </DialogDescription>
       </DialogHeader>
       <div className="grid gap-4 py-4">
-        <SensorDataForm />
+        <SensorDataForm afterSubmit={closeDialog} />
       </div>
     </DialogContent>
   </Dialog>

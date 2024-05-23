@@ -23,9 +23,9 @@ import { Input } from "./ui/input"
 import { useToast } from "./ui/use-toast"
 import { useState } from "react"
 import { getCurrentDatetime } from "@/lib/utils"
+import { Check, CheckCircle } from "lucide-react"
 
 const FormSchema = z.object({
-
   sensorId: z
     .number({
       required_error: "Sensor ID is required",
@@ -34,16 +34,14 @@ const FormSchema = z.object({
     .string({
       required_error: "Type is required",
     }),
-
   value: z
     .number({
       required_error: "Value is required",
     }),
-
   timestamp: z.string().min(1, { message: "Timestamp is requried" }).default(() => getCurrentDatetime()),
 })
 
-export function SensorDataForm() {
+export function SensorDataForm( {afterSubmit}:{afterSubmit: CallableFunction} ) {
   const [currentDatetime, setCurrentDatetime] = useState(getCurrentDatetime());
   const { toast } = useToast()
   const form = useForm<z.infer<typeof FormSchema>>({
@@ -55,7 +53,7 @@ export function SensorDataForm() {
     headers.append("Content-Type", "application/x-www-form-urlencoded");
 
     const formData = new URLSearchParams();
-    formData.append("sensorId", data.sensorId);
+    formData.append("sensorId", `${data.sensorId}`);
     formData.append("type", data.type);
     formData.append("value", `${data.value}`);
 
@@ -69,27 +67,21 @@ export function SensorDataForm() {
             body: formData,
         });
         const responseData = await response.json();
-        console.log(responseData);
-
         toast({
-            title: "You submitted the following values:",
-            description: (
-                <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-                    <code className="text-white">{JSON.stringify(responseData, null, 2)}</code>
-                </pre>
-            ),
-        });
+          title: "Success",
+          description: "Sensor data stored.",
+          action: <CheckCircle />
+        })
     } catch (error) {
         console.error('Error fetching sensor data:', error);
     }
+    finally {
+      afterSubmit()
+    }
 }
 
-
-  const storeSensorData = async (formData: z.infer<typeof FormSchema>) => {
-
-  };
-
   return (
+    <>
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
 
@@ -173,5 +165,7 @@ export function SensorDataForm() {
         </div>
       </form>
     </Form>
+
+    </>
   )
 }

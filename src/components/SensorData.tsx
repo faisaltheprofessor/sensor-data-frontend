@@ -11,7 +11,7 @@ const SensorData = () => {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
 
-  const [url, setUrl] = useState(`http://localhost:8000/sensors/data?limit=${limit}&page=${page}`);
+  const [url, setUrl] = useState(`http://localhost:8000/sensors/data?limit=${limit}&page=${page}&desc=true`);
 
   const fetchSensorData = async () => {
     try {
@@ -38,7 +38,7 @@ const SensorData = () => {
   const updateTable = (limit: number, page: number) => {
     setLimit(limit);
     setPage(page);
-    setUrl(`http://localhost:8000/sensors/data?limit=${limit}&page=${page}`)
+    setUrl(`http://localhost:8000/sensors/data?limit=${limit}&page=${page}&desc=true`)
     fetchSensorData();
   };
 
