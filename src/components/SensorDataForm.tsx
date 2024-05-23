@@ -41,7 +41,7 @@ const FormSchema = z.object({
   timestamp: z.string().min(1, { message: "Timestamp is requried" }).default(() => getCurrentDatetime()),
 })
 
-export function SensorDataForm( {afterSubmit}:{afterSubmit: CallableFunction} ) {
+export function SensorDataForm({ afterSubmit }: { afterSubmit: CallableFunction }) {
   const [currentDatetime, setCurrentDatetime] = useState(getCurrentDatetime());
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -60,109 +60,114 @@ export function SensorDataForm( {afterSubmit}:{afterSubmit: CallableFunction} ) 
     formData.append("timestamp", formattedTimestamp);
 
     try {
-        const response = await fetch("http://localhost:8000/sensors/data", {
-            method: "POST",
-            headers,
-            body: formData,
-        });
-        const responseData = await response.json();
-        if(!responseData.success) {
+      const response = await fetch("http://localhost:8000/sensors/data", {
+        method: "POST",
+        headers,
+        body: formData,
+      });
+      const responseData = await response.json();
+      if (!responseData.success) {
         toast.error(responseData.error)
         return
-        }
-        afterSubmit()
-        toast.success("Data stored successfully")
+      }
+      afterSubmit()
+      toast.success("Data stored successfully")
     } catch (error) {
       toast.error(`Server Unreachable`)
       console.log(error)
     }
-}
+  }
 
   return (
     <>
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
 
-        {/* Sensor ID */}
-        <FormField
-          control={form.control}
-          name="sensorId"
-          render={({ field }) => (
-            <>
-              <FormItem>
-                <FormLabel>Sensor ID</FormLabel>
-                <Input type="number" placeholder="Sensor ID" onChange={(e) => field.onChange(parseInt(e.target.value) || '')} className="w-full" />
-                <FormMessage />
-              </FormItem>
-            </>
-          )}
-        />
+          {/* Sensor ID */}
+          <FormField
+            control={form.control}
+            name="sensorId"
+            render={({ field }) => (
+              <>
+                <FormItem>
+                  <FormLabel>Sensor ID</FormLabel>
+                  <Input type="number" placeholder="Sensor ID" onChange={(e) => field.onChange(parseInt(e.target.value) || '')} className="w-full" />
+                  <FormMessage />
+                </FormItem>
+              </>
+            )}
+          />
 
-        
-        {/* TYPE */}
-        <FormField
-          control={form.control}
-          name="type"
-          render={({ field }) => (
-            <>
-              <FormItem>
-                <FormLabel>Type</FormLabel>
-                <Select onValueChange={field.onChange} defaultValue={field.value}>
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select a Type" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    <SelectItem value="Temprature">Temprature</SelectItem>
-                    <SelectItem value="Humidity">Humidity</SelectItem>
-                    <SelectItem value="pH">pH</SelectItem>
-                    <SelectItem value="Air Quality">Air Quality</SelectItem>
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            </>
-          )}
-        />
 
-        {/* VALUE */}
-        <FormField
-          control={form.control}
-          name="value"
-          render={({ field }) => (
-            <>
-              <FormItem>
-                <FormLabel>Value</FormLabel>
-                <Input type="number" placeholder="Value" onChange={(e) => field.onChange(parseInt(e.target.value) || '')} className="w-full" />
-                <FormMessage />
-              </FormItem>
-            </>
-          )}
-        />
+          {/* TYPE */}
+          <FormField
+            control={form.control}
+            name="type"
+            render={({ field }) => (
+              <>
+                <FormItem>
+                  <FormLabel>Type</FormLabel>
+                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select a Type" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="Temprature">Temprature</SelectItem>
+                      <SelectItem value="Humidity">Humidity</SelectItem>
+                      <SelectItem value="pH">pH</SelectItem>
+                      <SelectItem value="Air Quality">Air Quality</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              </>
+            )}
+          />
 
-        {/* TIMESTAMP */}
-        <FormField
-          control={form.control}
-          name="timestamp"
-          render={({ field }) => (
-            <>
-              <FormItem>
-                <FormLabel>Timestamp</FormLabel>
-                <Input type="datetime-local" step="1" defaultValue={currentDatetime} onChange={(e) => field.onChange(e.target.value || '')}  className="w-full" />
-                <FormMessage />
-              </FormItem>
+          {/* VALUE */}
+          <FormField
+            control={form.control}
+            name="value"
+            render={({ field }) => (
+              <>
+                <FormItem>
+                  <FormLabel>Value</FormLabel>
+                  <Input type="number" placeholder="Value" onChange={(e) => field.onChange(parseInt(e.target.value) || '')} className="w-full" />
+                  <FormMessage />
+                </FormItem>
+              </>
+            )}
+          />
 
-            </>
-          )}
-        />
+          {/* TIMESTAMP */}
+          <FormField
+            control={form.control}
+            name="timestamp"
+            render={({ field }) => (
+              <>
+                <FormItem>
+                  <FormLabel>Timestamp</FormLabel>
+                  <Input type="datetime-local" step="1" defaultValue={currentDatetime} onChange={(e) => {
+                    const newValue = e.target.value;
+                    const newValueWithSeconds = newValue.length === 16 ? `${newValue}:00` : newValue;
+                    field.onChange(newValueWithSeconds || '');
+                  }}
+                    className="w-full" />
+                  <FormMessage />
+                </FormItem>
 
-        <div className="flex justify-between">
-          <div></div>
-          <Button type="submit">Save</Button>
-        </div>
-      </form>
-    </Form>
+              </>
+            )}
+          />
+
+          <div className="flex justify-between">
+            <div></div>
+            <Button type="submit">Save</Button>
+          </div>
+        </form>
+      </Form>
 
     </>
   )
