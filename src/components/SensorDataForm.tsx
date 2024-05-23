@@ -3,65 +3,174 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
-
 import { Button } from "@/components/ui/button"
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
-import { toast } from "@/components/ui/use-toast"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+import { Input } from "./ui/input"
+import { useToast } from "./ui/use-toast"
+import { useState } from "react"
+import { getCurrentDatetime } from "@/lib/utils"
 
 const FormSchema = z.object({
-  username: z.string().min(2, {
-    message: "Username must be at least 2 characters.",
-  }),
+
+  sensorId: z
+    .number({
+      required_error: "Sensor ID is required",
+    }),
+  type: z
+    .string({
+      required_error: "Type is required",
+    }),
+
+  value: z
+    .number({
+      required_error: "Value is required",
+    }),
+
+  timestamp: z.string().min(1, { message: "Timestamp is requried" }).default(() => getCurrentDatetime()),
 })
 
 export function SensorDataForm() {
+  const [currentDatetime, setCurrentDatetime] = useState(getCurrentDatetime());
+  const { toast } = useToast()
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
-    defaultValues: {
-      username: "",
-    },
   })
 
-  function onSubmit(data: z.infer<typeof FormSchema>) {
-    toast({
-      title: "You submitted the following values:",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    })
-  }
+  async function onSubmit(data: z.infer<typeof FormSchema>) {
+    const headers = new Headers();
+    headers.append("Content-Type", "application/x-www-form-urlencoded");
+
+    const formData = new URLSearchParams();
+    formData.append("sensorId", data.sensorId);
+    formData.append("type", data.type);
+    formData.append("value", `${data.value}`);
+
+    const formattedTimestamp = data.timestamp.replace("T", " ");
+    formData.append("timestamp", formattedTimestamp);
+
+    try {
+        const response = await fetch("http://localhost:8000/sensors/data", {
+            method: "POST",
+            headers,
+            body: formData,
+        });
+        const responseData = await response.json();
+        console.log(responseData);
+
+        toast({
+            title: "You submitted the following values:",
+            description: (
+                <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+                    <code className="text-white">{JSON.stringify(responseData, null, 2)}</code>
+                </pre>
+            ),
+        });
+    } catch (error) {
+        console.error('Error fetching sensor data:', error);
+    }
+}
+
+
+  const storeSensorData = async (formData: z.infer<typeof FormSchema>) => {
+
+  };
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="w-2/3 space-y-6">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+
+        {/* Sensor ID */}
         <FormField
           control={form.control}
-          name="username"
+          name="sensorId"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Username</FormLabel>
-              <FormControl>
-                <Input placeholder="shadcn" {...field} />
-              </FormControl>
-              <FormDescription>
-                This is your public display name.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
+            <>
+              <FormItem>
+                <FormLabel>Sensor ID</FormLabel>
+                <Input type="number" placeholder="Value" onChange={(e) => field.onChange(parseInt(e.target.value) || '')} className="w-full" />
+                <FormMessage />
+              </FormItem>
+            </>
           )}
         />
-        <Button type="submit">Submit</Button>
+
+        
+        {/* TYPE */}
+        <FormField
+          control={form.control}
+          name="type"
+          render={({ field }) => (
+            <>
+              <FormItem>
+                <FormLabel>Type</FormLabel>
+                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select a Type" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem value="Temprature">Temprature</SelectItem>
+                    <SelectItem value="Humidity">Humidity</SelectItem>
+                    <SelectItem value="pH">pH</SelectItem>
+                    <SelectItem value="Air Quality">Air Quality</SelectItem>
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            </>
+          )}
+        />
+
+        {/* VALUE */}
+        <FormField
+          control={form.control}
+          name="value"
+          render={({ field }) => (
+            <>
+              <FormItem>
+                <FormLabel>Value</FormLabel>
+                <Input type="number" placeholder="Value" onChange={(e) => field.onChange(parseInt(e.target.value) || '')} className="w-full" />
+                <FormMessage />
+              </FormItem>
+            </>
+          )}
+        />
+
+        {/* TIMESTAMP */}
+        <FormField
+          control={form.control}
+          name="timestamp"
+          render={({ field }) => (
+            <>
+              <FormItem>
+                <FormLabel>Timestamp</FormLabel>
+                <Input type="datetime-local" defaultValue={currentDatetime} placeholder="yyyy-mm-ddTHH:mm:ss" onChange={(e) => field.onChange(e.target.value || '')} pattern="\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}" className="w-full" />
+                <FormMessage />
+              </FormItem>
+
+            </>
+          )}
+        />
+
+        <div className="flex justify-between">
+          <div></div>
+          <Button type="submit">Save</Button>
+        </div>
       </form>
     </Form>
   )
