@@ -25,7 +25,7 @@ const Pagination = ({ perPage, totalPages = 1, currentPage = 1, action }: Props)
   const isLastPage = currentPage === totalPages;
 
   return (
-    <div className="flex items-center justify-around px-2 mt-4 pb-12">
+    <div className="flex items-center justify-around px-2 mt-4">
       <div className="flex items-center space-x-6 lg:space-x-8">
         <div className="flex items-center space-x-2">
         <div className="flex items-center space-x-2">
