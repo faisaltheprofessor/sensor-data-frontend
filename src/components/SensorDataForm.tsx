@@ -91,7 +91,7 @@ export function SensorDataForm( {afterSubmit}:{afterSubmit: CallableFunction} ) 
             <>
               <FormItem>
                 <FormLabel>Sensor ID</FormLabel>
-                <Input type="number" placeholder="Value" onChange={(e) => field.onChange(parseInt(e.target.value) || '')} className="w-full" />
+                <Input type="number" placeholder="Sensor ID" onChange={(e) => field.onChange(parseInt(e.target.value) || '')} className="w-full" />
                 <FormMessage />
               </FormItem>
             </>
@@ -149,7 +149,7 @@ export function SensorDataForm( {afterSubmit}:{afterSubmit: CallableFunction} ) 
             <>
               <FormItem>
                 <FormLabel>Timestamp</FormLabel>
-                <Input type="datetime-local" defaultValue={currentDatetime} placeholder="yyyy-mm-ddTHH:mm:ss" onChange={(e) => field.onChange(e.target.value || '')} pattern="\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}" className="w-full" />
+                <Input type="datetime-local" step="1" defaultValue={currentDatetime} onChange={(e) => field.onChange(e.target.value || '')}  className="w-full" />
                 <FormMessage />
               </FormItem>
 
