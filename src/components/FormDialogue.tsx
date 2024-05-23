@@ -22,7 +22,7 @@ export function FormDialogue({ triggerRerender }: { triggerRerender:CallableFunc
     <DialogTrigger asChild id="closeDialog">
       <Button variant="outline">Create</Button>
     </DialogTrigger>
-    <DialogContent className="sm:max-w-[425px]" onInteractOutside={(e) => {
+    <DialogContent className="sm:max-w-[425px] min-h-[536px]" onInteractOutside={(e) => {
           e.preventDefault();
         }}>
       <DialogHeader>

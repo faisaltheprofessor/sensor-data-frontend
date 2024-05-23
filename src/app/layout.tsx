@@ -17,7 +17,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body>
           <ThemeProvider
             attribute="class"
@@ -25,9 +25,6 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            <div className="absolute right-10 top-10">
-            <ModeToggle />
-            </div>
             {children}
           </ThemeProvider>
         </body>

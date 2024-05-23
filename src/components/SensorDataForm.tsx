@@ -28,18 +28,18 @@ import { Check, CheckCircle } from "lucide-react"
 const FormSchema = z.object({
   sensorId: z
     .number({
-      required_error: "Sensor ID is required",
+      required_error: "required",
     }),
   type: z
     .string({
-      required_error: "Type is required",
+      required_error: "required",
     }),
   value: z
     .number({
-      required_error: "Value is required",
+      required_error: "required",
     }),
   timestamp: z.string().min(1, { message: "Timestamp is requried" }).default(() => getCurrentDatetime()),
-})
+}) 
 
 export function SensorDataForm({ afterSubmit }: { afterSubmit: CallableFunction }) {
   const [currentDatetime, setCurrentDatetime] = useState(getCurrentDatetime());
@@ -90,9 +90,11 @@ export function SensorDataForm({ afterSubmit }: { afterSubmit: CallableFunction 
             render={({ field }) => (
               <>
                 <FormItem>
-                  <FormLabel>Sensor ID</FormLabel>
+                <div className="flex gap-x-1 items-center">
+                  <FormLabel>Value</FormLabel>
+                  <FormMessage  className="text-[12px]"/>
+                  </div>
                   <Input type="number" placeholder="Sensor ID" onChange={(e) => field.onChange(parseInt(e.target.value) || '')} className="w-full" />
-                  <FormMessage />
                 </FormItem>
               </>
             )}
@@ -106,7 +108,10 @@ export function SensorDataForm({ afterSubmit }: { afterSubmit: CallableFunction 
             render={({ field }) => (
               <>
                 <FormItem>
-                  <FormLabel>Type</FormLabel>
+                <div className="flex gap-x-1 items-center">
+                  <FormLabel>Value</FormLabel>
+                  <FormMessage  className="text-[12px]"/>
+                  </div>
                   <Select onValueChange={field.onChange} defaultValue={field.value}>
                     <FormControl>
                       <SelectTrigger>
@@ -120,7 +125,6 @@ export function SensorDataForm({ afterSubmit }: { afterSubmit: CallableFunction 
                       <SelectItem value="Air Quality">Air Quality</SelectItem>
                     </SelectContent>
                   </Select>
-                  <FormMessage />
                 </FormItem>
               </>
             )}
@@ -133,9 +137,11 @@ export function SensorDataForm({ afterSubmit }: { afterSubmit: CallableFunction 
             render={({ field }) => (
               <>
                 <FormItem>
+                  <div className="flex gap-x-1 items-center">
                   <FormLabel>Value</FormLabel>
+                  <FormMessage  className="text-[12px]"/>
+                  </div>
                   <Input type="number" placeholder="Value" onChange={(e) => field.onChange(parseInt(e.target.value) || '')} className="w-full" />
-                  <FormMessage />
                 </FormItem>
               </>
             )}
@@ -155,7 +161,7 @@ export function SensorDataForm({ afterSubmit }: { afterSubmit: CallableFunction 
                     field.onChange(newValueWithSeconds || '');
                   }}
                     className="w-full" />
-                  <FormMessage />
+                  <FormMessage className="text-xs" />
                 </FormItem>
 
               </>
