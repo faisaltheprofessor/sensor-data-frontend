@@ -1,52 +1,75 @@
 "use client"
-import React, { useState, useEffect, Suspense } from 'react';
-import { TableHeader, TableRow, TableHead, TableBody, TableCell, Table } from './ui/table';
-import Pagination from './pagination';
-import { Separator } from './ui/separator';
+import React, { useState, useEffect } from 'react'
+import { TableHeader, TableRow, TableHead, TableBody, TableCell, Table } from './ui/table'
+import Pagination from './pagination'
+import { Separator } from './ui/separator'
+import { toast } from 'sonner'
 
-const SensorData = () => {
-  const [sensorData, setSensorData] = useState([]);
-  const [links, setLinks] = useState({});
-  const [limit, setLimit] = useState(10);
-  const [page, setPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(0);
+interface SensorDataProps {
+  sensorId: string
+  type: string
+  value: number
+  timestamp: string
+}
 
-  const [url, setUrl] = useState(`http://localhost:8000/sensors/data?limit=${limit}&page=${page}&desc=true`);
+interface LinksProps {
+  first: string;
+  last: string;
+  next: string;
+  prev: string;
+}
+
+const SensorData = ({ shouldRerender }: { shouldRerender : boolean }) => {
+  const [sensorData, setSensorData] = useState<SensorDataProps[]>([])
+  const [links, setLinks] = useState<LinksProps>({
+    first: '',
+    last: '',
+    next: '',
+    prev: '',
+  });
+  const [limit, setLimit] = useState(10)
+  const [page, setPage] = useState(1)
+  const [totalPages, setTotalPages] = useState(0)
+  const indexNumber = (page - 1) * limit + 1 // for Table row count
+  const [url, setUrl] = useState(`http://localhost:8000/sensors/data?limit=${limit}&page=${page}&desc=true`)
 
   const fetchSensorData = async () => {
     try {
-      const response = await fetch(url);
-      const data = await response.json();
-      setSensorData(data.data);
-      setLinks(data.links);
-      setTotalPages(data.links.last ? Math.ceil(parseInt(data.links.last.split('page=')[1])) : 0);
+      const response = await fetch(url)
+      const data = await response.json()
+      setSensorData(data.data)
+      setLinks(data.links)
+      setTotalPages(data.links.last ? Math.ceil(parseInt(data.links.last.split('page=')[1])) : 0)
     } catch (error) {
-      console.error('Error fetching sensor data:', error);
+      toast.error(<><h1 className='font-bold'>Server Unreachable: </h1><p>{ `${ error }` }</p></>)
+      return
     }
-  };
+  }
 
   useEffect(() => {
-    fetchSensorData(); // Initial fetch
+    fetchSensorData() // Initial fetch
 
     const interval = setInterval(() => {
-      fetchSensorData();
-    }, 5000); // Update every five second (adjust the time interval as needed)
+      fetchSensorData()
+    }, 5000) // Update every five second (adjust the time interval as needed)
 
-    return () => clearInterval(interval); // Cleanup the interval on component unmount
-  }, [limit, page]); // Update data on limit or page change
+    return () => clearInterval(interval) // Cleanup the interval on component unmount
+  }, [limit, page, shouldRerender]) // Update data on limit or page change
 
   const updateTable = (limit: number, page: number) => {
-    setLimit(limit);
-    setPage(page);
+    setLimit(limit)
+    setPage(page)
     setUrl(`http://localhost:8000/sensors/data?limit=${limit}&page=${page}&desc=true`)
-    fetchSensorData();
-  };
+    fetchSensorData()
+  }
 
   return (
+  
     <>
       <Table>
         <TableHeader>
           <TableRow>
+          <TableHead>#</TableHead>
             <TableHead>Sensor ID</TableHead>
             <TableHead>Type</TableHead>
             <TableHead>Value</TableHead>
@@ -54,8 +77,9 @@ const SensorData = () => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {sensorData.map((sensor) => (
+          {sensorData.map((sensor, index) => (
             <TableRow key={sensor.sensorId}>
+              <TableCell>{indexNumber + index}</TableCell>
               <TableCell>{sensor.sensorId}</TableCell>
               <TableCell>{sensor.type}</TableCell>
               <TableCell>{sensor.value}</TableCell>
@@ -76,7 +100,7 @@ const SensorData = () => {
         action={updateTable}
       />
     </>
-  );
-};
+  )
+}
 
-export default SensorData;
+export default SensorData

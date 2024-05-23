@@ -12,9 +12,10 @@ import {
 import { SensorDataForm } from "./SensorDataForm"
 
 
-export function FormDialogue() {
+export function FormDialogue({ triggerRerender }: { triggerRerender:CallableFunction }) {
   const closeDialog = () => {
     document.getElementById('closeDialog')?.click();
+    triggerRerender();
   }
   return (
     <Dialog>
@@ -37,5 +38,3 @@ export function FormDialogue() {
   </Dialog>
   )
 }
-
-

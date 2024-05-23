@@ -20,7 +20,7 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Input } from "./ui/input"
-import { useToast } from "./ui/use-toast"
+import { toast } from "sonner"
 import { useState } from "react"
 import { getCurrentDatetime } from "@/lib/utils"
 import { Check, CheckCircle } from "lucide-react"
@@ -43,7 +43,6 @@ const FormSchema = z.object({
 
 export function SensorDataForm( {afterSubmit}:{afterSubmit: CallableFunction} ) {
   const [currentDatetime, setCurrentDatetime] = useState(getCurrentDatetime());
-  const { toast } = useToast()
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
   })
@@ -67,16 +66,15 @@ export function SensorDataForm( {afterSubmit}:{afterSubmit: CallableFunction} ) 
             body: formData,
         });
         const responseData = await response.json();
-        toast({
-          title: "Success",
-          description: "Sensor data stored.",
-          action: <CheckCircle />
-        })
+        if(!responseData.success) {
+        toast.error(responseData.error)
+        return
+        }
+        afterSubmit()
+        toast.success("Data stored successfully")
     } catch (error) {
-        console.error('Error fetching sensor data:', error);
-    }
-    finally {
-      afterSubmit()
+      toast.error(`Server Unreachable`)
+      console.log(error)
     }
 }
 
