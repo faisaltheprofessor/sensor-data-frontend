@@ -25,6 +25,9 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
+            <div className="absolute right-10 top-10">
+            <ModeToggle />
+            </div>
             {children}
           </ThemeProvider>
         </body>
