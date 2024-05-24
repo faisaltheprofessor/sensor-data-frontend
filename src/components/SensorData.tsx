@@ -41,7 +41,7 @@ const SensorData = ({ shouldRerender }: { shouldRerender : boolean }) => {
       setLinks(data.links)
       setTotalPages(data.links.last ? Math.ceil(parseInt(data.links.last.split('page=')[1])) : 0)
     } catch (error) {
-      toast.error(<><h1 className='font-bold'>Server Unreachable: </h1><p>{ `${ error }` }</p></>)
+      toast.error("Server Unreachable")
       return
     }
   }

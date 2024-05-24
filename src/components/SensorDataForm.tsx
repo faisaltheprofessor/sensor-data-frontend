@@ -91,10 +91,10 @@ export function SensorDataForm({ afterSubmit }: { afterSubmit: CallableFunction 
               <>
                 <FormItem>
                 <div className="flex gap-x-1 items-center">
-                  <FormLabel>Value</FormLabel>
+                  <FormLabel>Sensor ID</FormLabel>
                   <FormMessage  className="text-[12px]"/>
                   </div>
-                  <Input type="number" placeholder="Sensor ID" onChange={(e) => field.onChange(parseInt(e.target.value) || '')} className="w-full" />
+                  <Input type="number" placeholder="123" onChange={(e) => field.onChange(parseInt(e.target.value) || '')} className="w-full" />
                 </FormItem>
               </>
             )}
@@ -141,7 +141,7 @@ export function SensorDataForm({ afterSubmit }: { afterSubmit: CallableFunction 
                   <FormLabel>Value</FormLabel>
                   <FormMessage  className="text-[12px]"/>
                   </div>
-                  <Input type="number" placeholder="Value" onChange={(e) => field.onChange(parseInt(e.target.value) || '')} className="w-full" />
+                  <Input type="number" placeholder="123" onChange={(e) => field.onChange(parseInt(e.target.value) || '')} className="w-full" />
                 </FormItem>
               </>
             )}
