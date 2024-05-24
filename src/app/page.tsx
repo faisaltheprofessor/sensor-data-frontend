@@ -1,6 +1,5 @@
 "use client"
 import { FormDialogue } from "@/components/FormDialogue";
-import { ModeToggle } from "@/components/ModeTogle";
 import SensorData from "@/components/SensorData";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
