@@ -23,7 +23,6 @@ import { Input } from "./ui/input"
 import { toast } from "sonner"
 import { useState } from "react"
 import { getCurrentDatetime } from "@/lib/utils"
-import { Check, CheckCircle } from "lucide-react"
 
 const FormSchema = z.object({
   sensorId: z
