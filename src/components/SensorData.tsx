@@ -1,7 +1,7 @@
 "use client"
 import React, { useState, useEffect } from 'react'
 import { TableHeader, TableRow, TableHead, TableBody, TableCell, Table } from './ui/table'
-import Pagination from './pagination'
+import Pagination from './Pagination'
 import { Separator } from './ui/separator'
 import { toast } from 'sonner'
 
@@ -54,7 +54,7 @@ const SensorData = ({ shouldRerender }: { shouldRerender : boolean }) => {
     }, 5000) // Update every five second (adjust the time interval as needed)
 
     return () => clearInterval(interval) // Cleanup the interval on component unmount
-  }, [limit, page, shouldRerender]) // Update data on limit or page change
+  }, [limit, page, shouldRerender]) // Update data on these changes
 
   const updateTable = (limit: number, page: number) => {
     setLimit(limit)

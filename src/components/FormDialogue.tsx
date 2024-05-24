@@ -11,7 +11,6 @@ import {
 } from "@/components/ui/dialog"
 import { SensorDataForm } from "./SensorDataForm"
 
-
 export function FormDialogue({ triggerRerender }: { triggerRerender:CallableFunction }) {
   const closeDialog = () => {
     document.getElementById('closeDialog')?.click();
