@@ -66,7 +66,7 @@ export function SensorDataForm({ afterSubmit }: { afterSubmit: CallableFunction 
       });
       const responseData = await response.json();
       if (!responseData.success) {
-        toast.error(responseData.error)
+        toast.error(responseData.message)
         return
       }
       afterSubmit()
