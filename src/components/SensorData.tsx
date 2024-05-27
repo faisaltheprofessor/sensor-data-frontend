@@ -64,12 +64,11 @@ const SensorData = ({ shouldRerender }: { shouldRerender : boolean }) => {
   }
 
   return (
-  
     <>
       <Table>
         <TableHeader>
           <TableRow>
-          <TableHead>#</TableHead>
+            <TableHead>#</TableHead>
             <TableHead>Sensor ID</TableHead>
             <TableHead>Type</TableHead>
             <TableHead>Value</TableHead>
@@ -77,18 +76,26 @@ const SensorData = ({ shouldRerender }: { shouldRerender : boolean }) => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {sensorData.map((sensor, index) => (
-            <TableRow key={sensor.sensorId}>
-              <TableCell>{indexNumber + index}</TableCell>
-              <TableCell>{sensor.sensorId}</TableCell>
-              <TableCell>{sensor.type}</TableCell>
-              <TableCell>{sensor.value}</TableCell>
-              <TableCell>{sensor.timestamp}</TableCell>
+          {sensorData.length === 0 ? (
+            <TableRow className='bg-zinc-100 text-slate-500 text-center'>
+              <TableCell colSpan={5}>No records</TableCell>
             </TableRow>
-          ))}
+          ) : (
+            <>
+              {sensorData.map((sensor, index) => (
+                <TableRow key={sensor.sensorId}>
+                  <TableCell>{indexNumber + index}</TableCell>
+                  <TableCell>{sensor.sensorId}</TableCell>
+                  <TableCell>{sensor.type}</TableCell>
+                  <TableCell>{sensor.value}</TableCell>
+                  <TableCell>{sensor.timestamp}</TableCell>
+                </TableRow>
+              ))}
+            </>
+          )}
         </TableBody>
       </Table>
-        <Separator />
+      <Separator />
       <Pagination
         perPage={limit}
         totalPages={totalPages}
@@ -100,6 +107,7 @@ const SensorData = ({ shouldRerender }: { shouldRerender : boolean }) => {
         action={updateTable}
       />
     </>
+
   )
 }
 
