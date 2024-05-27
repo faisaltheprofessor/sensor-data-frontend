@@ -93,7 +93,7 @@ export function SensorDataForm({ afterSubmit }: { afterSubmit: CallableFunction 
                   <FormLabel>Sensor ID</FormLabel>
                   <FormMessage  className="text-[12px]"/>
                   </div>
-                  <Input type="number" placeholder="123" onChange={(e) => field.onChange(parseInt(e.target.value) || '')} className="w-full" />
+                  <Input data-testid="sensor-id-input" type="number" placeholder="123" onChange={(e) => field.onChange(parseInt(e.target.value) || '')} className="w-full" />
                 </FormItem>
               </>
             )}
@@ -112,7 +112,7 @@ export function SensorDataForm({ afterSubmit }: { afterSubmit: CallableFunction 
                   <FormMessage  className="text-[12px]"/>
                   </div>
                   <Select onValueChange={field.onChange} defaultValue={field.value}>
-                    <FormControl>
+                    <FormControl data-testid="select-type">
                       <SelectTrigger>
                         <SelectValue placeholder="Select a Type" />
                       </SelectTrigger>
@@ -140,7 +140,7 @@ export function SensorDataForm({ afterSubmit }: { afterSubmit: CallableFunction 
                   <FormLabel>Value</FormLabel>
                   <FormMessage  className="text-[12px]"/>
                   </div>
-                  <Input type="number" placeholder="123" onChange={(e) => field.onChange(parseInt(e.target.value) || '')} className="w-full" />
+                  <Input data-testid="value-input" type="number" placeholder="123" onChange={(e) => field.onChange(parseInt(e.target.value) || '')} className="w-full" />
                 </FormItem>
               </>
             )}
@@ -154,7 +154,7 @@ export function SensorDataForm({ afterSubmit }: { afterSubmit: CallableFunction 
               <>
                 <FormItem>
                   <FormLabel>Timestamp</FormLabel>
-                  <Input type="datetime-local" step="1" defaultValue={currentDatetime} onChange={(e) => {
+                  <Input data-testid="timestamp-input" type="datetime-local" step="1" defaultValue={currentDatetime} onChange={(e) => {
                     const newValue = e.target.value;
                     const newValueWithSeconds = newValue.length === 16 ? `${newValue}:00` : newValue;
                     field.onChange(newValueWithSeconds || '');
@@ -169,7 +169,7 @@ export function SensorDataForm({ afterSubmit }: { afterSubmit: CallableFunction 
 
           <div className="flex justify-between">
             <div></div>
-            <Button type="submit">Save</Button>
+            <Button data-testid="save-button" type="submit">Save</Button>
           </div>
         </form>
       </Form>
