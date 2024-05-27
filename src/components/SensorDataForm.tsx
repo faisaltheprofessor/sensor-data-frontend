@@ -38,7 +38,7 @@ const FormSchema = z.object({
       required_error: "required",
     }),
   timestamp: z.string().min(1, { message: "Timestamp is requried" }).default(() => getCurrentDatetime()),
-}) 
+})
 
 export function SensorDataForm({ afterSubmit }: { afterSubmit: CallableFunction }) {
   const [currentDatetime, setCurrentDatetime] = useState(getCurrentDatetime());
@@ -89,9 +89,9 @@ export function SensorDataForm({ afterSubmit }: { afterSubmit: CallableFunction 
             render={({ field }) => (
               <>
                 <FormItem>
-                <div className="flex gap-x-1 items-center">
-                  <FormLabel>Sensor ID</FormLabel>
-                  <FormMessage  className="text-[12px]"/>
+                  <div className="flex gap-x-1 items-center">
+                    <FormLabel>Sensor ID</FormLabel>
+                    <FormMessage className="text-[12px]" />
                   </div>
                   <Input data-testid="sensor-id-input" type="number" placeholder="123" onChange={(e) => field.onChange(parseInt(e.target.value) || '')} className="w-full" />
                 </FormItem>
@@ -107,9 +107,9 @@ export function SensorDataForm({ afterSubmit }: { afterSubmit: CallableFunction 
             render={({ field }) => (
               <>
                 <FormItem>
-                <div className="flex gap-x-1 items-center">
-                  <FormLabel>Value</FormLabel>
-                  <FormMessage  className="text-[12px]"/>
+                  <div className="flex gap-x-1 items-center">
+                    <FormLabel>Value</FormLabel>
+                    <FormMessage className="text-[12px]" />
                   </div>
                   <Select onValueChange={field.onChange} defaultValue={field.value}>
                     <FormControl data-testid="select-type">
@@ -137,8 +137,8 @@ export function SensorDataForm({ afterSubmit }: { afterSubmit: CallableFunction 
               <>
                 <FormItem>
                   <div className="flex gap-x-1 items-center">
-                  <FormLabel>Value</FormLabel>
-                  <FormMessage  className="text-[12px]"/>
+                    <FormLabel>Value</FormLabel>
+                    <FormMessage className="text-[12px]" />
                   </div>
                   <Input data-testid="value-input" type="number" placeholder="123" onChange={(e) => field.onChange(parseInt(e.target.value) || '')} className="w-full" />
                 </FormItem>

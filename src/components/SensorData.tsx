@@ -19,7 +19,7 @@ interface LinksProps {
   prev: string;
 }
 
-const SensorData = ({ shouldRerender }: { shouldRerender : boolean }) => {
+const SensorData = ({ shouldRerender }: { shouldRerender: boolean }) => {
   const [sensorData, setSensorData] = useState<SensorDataProps[]>([])
   const [links, setLinks] = useState<LinksProps>({
     first: '',

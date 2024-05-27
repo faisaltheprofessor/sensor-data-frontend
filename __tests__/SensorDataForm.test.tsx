@@ -1,12 +1,10 @@
-// Integration test example for the SensorDataForm component using data-testid attributes
-
 import { render, screen, fireEvent } from '@testing-library/react'
 import { SensorDataForm } from '@/components/SensorDataForm'
 import { mock } from 'node:test'
 
 describe("SensorDataForm Component", () => {
-  
-    it('should render the SensorDataForm component with form fields and submit button', ()  => {
+
+    it('should render the SensorDataForm component with form fields and submit button', () => {
         render(<SensorDataForm afterSubmit={mock.fn()} />)
 
         const sensorIdInput = screen.getByTestId('sensor-id-input')
