@@ -6,7 +6,7 @@ A nextjs app that communicates with an express server to receive and submit sens
 ```bash
 npm install
 ```
-2.Run the server:
+2. Run the server:
 ```bash
 npm run dev
 ```
