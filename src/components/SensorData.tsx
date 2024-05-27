@@ -77,7 +77,7 @@ const SensorData = ({ shouldRerender }: { shouldRerender: boolean }) => {
         </TableHeader>
         <TableBody>
           {sensorData.length === 0 ? (
-            <TableRow className='bg-zinc-100 text-slate-500 text-center'>
+            <TableRow className='bg-zinc-100 text-slate-500 dark:bg-gray-800 text-center'>
               <TableCell colSpan={5}>No records</TableCell>
             </TableRow>
           ) : (
