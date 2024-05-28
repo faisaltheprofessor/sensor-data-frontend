@@ -108,7 +108,7 @@ export function SensorDataForm({ afterSubmit }: { afterSubmit: CallableFunction 
               <>
                 <FormItem>
                   <div className="flex gap-x-1 items-center">
-                    <FormLabel>Value</FormLabel>
+                    <FormLabel>Type</FormLabel>
                     <FormMessage className="text-[12px]" />
                   </div>
                   <Select onValueChange={field.onChange} defaultValue={field.value}>
