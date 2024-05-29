@@ -20,6 +20,7 @@ interface LinksProps {
 }
 
 const SensorData = ({ shouldRerender }: { shouldRerender: boolean }) => {
+  const [tabActive, setTabActive] = useState(!document.hidden)
   const [sensorData, setSensorData] = useState<SensorDataProps[]>([])
   const [links, setLinks] = useState<LinksProps>({
     first: '',
@@ -41,20 +42,47 @@ const SensorData = ({ shouldRerender }: { shouldRerender: boolean }) => {
       setLinks(data.links)
       setTotalPages(data.links.last ? Math.ceil(parseInt(data.links.last.split('page=')[1])) : 0)
     } catch (error) {
-      toast.error("Server Unreachable")
+      toast.error(`Server Unreachable: ${error}`)
       return
     }
   }
 
+  const handleVisibilityChange = () => {
+    setTabActive(!document.hidden);
+  };
+
+  const fetchSensorDataIfTabActive = async () => {
+    if (tabActive) {
+      try {
+        const response = await fetch(url);
+        const data = await response.json();
+        setSensorData(data.data);
+        setLinks(data.links);
+        setTotalPages(data.links.last ? Math.ceil(parseInt(data.links.last.split('page=')[1])) : 0);
+      } catch (error) {
+        toast.error(`Server Unreachable: ${error}`);
+      }
+    }
+  };
+
+
   useEffect(() => {
-    fetchSensorData() // Initial fetch
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, []);
+
+  useEffect(() => {
+    fetchSensorDataIfTabActive(); // Initial fetch
 
     const interval = setInterval(() => {
-      fetchSensorData()
+      fetchSensorDataIfTabActive()
     }, 5000) // Update every five second (adjust the time interval as needed)
 
     return () => clearInterval(interval) // Cleanup the interval on component unmount
-  }, [limit, page, shouldRerender]) // Update data on these changes
+  }, [limit, page, shouldRerender, tabActive]) // Update data on these changes
 
   const updateTable = (limit: number, page: number) => {
     setLimit(limit)
