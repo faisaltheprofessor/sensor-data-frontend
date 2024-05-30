@@ -4,6 +4,7 @@ import { TableHeader, TableRow, TableHead, TableBody, TableCell, Table } from '.
 import Pagination from './Pagination'
 import { Separator } from './ui/separator'
 import { toast } from 'sonner'
+import { ChevronDown, ChevronUp } from 'lucide-react'
 
 interface SensorDataProps {
   sensorId: string
@@ -20,8 +21,9 @@ interface LinksProps {
 }
 
 const SensorData = ({ shouldRerender }: { shouldRerender: boolean }) => {
-  const [tabActive, setTabActive] = useState(!document.hidden)
+  const [tabActive, setTabActive] = useState(false)
   const [sensorData, setSensorData] = useState<SensorDataProps[]>([])
+  const [descending, setDescending] = useState<boolean>(false)
   const [links, setLinks] = useState<LinksProps>({
     first: '',
     last: '',
@@ -32,7 +34,7 @@ const SensorData = ({ shouldRerender }: { shouldRerender: boolean }) => {
   const [page, setPage] = useState(1)
   const [totalPages, setTotalPages] = useState(0)
   const indexNumber = (page - 1) * limit + 1 // for Table row count
-  const [url, setUrl] = useState(`http://localhost:8000/sensors/data?limit=${limit}&page=${page}&desc=true`)
+  const [url, setUrl] = useState(`http://localhost:8000/sensors/data?limit=${limit}&page=${page}&desc=${descending}`)
 
   const fetchSensorData = async () => {
     try {
@@ -67,13 +69,16 @@ const SensorData = ({ shouldRerender }: { shouldRerender: boolean }) => {
 
 
   useEffect(() => {
-    document.addEventListener('visibilitychange', handleVisibilityChange);
-
-    return () => {
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
-    };
+    if (typeof document !== 'undefined') {
+      setTabActive(!document.hidden);
+      document.addEventListener('visibilitychange', handleVisibilityChange);
+  
+      return () => {
+        document.removeEventListener('visibilitychange', handleVisibilityChange);
+      };
+    }
   }, []);
-
+  
   useEffect(() => {
     fetchSensorDataIfTabActive(); // Initial fetch
 
@@ -82,13 +87,20 @@ const SensorData = ({ shouldRerender }: { shouldRerender: boolean }) => {
     }, 5000) // Update every five second (adjust the time interval as needed)
 
     return () => clearInterval(interval) // Cleanup the interval on component unmount
-  }, [limit, page, shouldRerender, tabActive]) // Update data on these changes
+  }, [limit, page, shouldRerender, tabActive, descending]) // Update data on these changes
 
   const updateTable = (limit: number, page: number) => {
     setLimit(limit)
     setPage(page)
-    setUrl(`http://localhost:8000/sensors/data?limit=${limit}&page=${page}&desc=true`)
+    setUrl(`http://localhost:8000/sensors/data?limit=${limit}&page=${page}&desc=${descending}`)
     fetchSensorData()
+  }
+
+  const sort = () => {
+    const newDescending = !descending;
+    setDescending(newDescending);
+    setUrl(`http://localhost:8000/sensors/data?limit=${limit}&page=${page}&desc=${newDescending}`);
+    fetchSensorData();
   }
 
   return (
@@ -97,7 +109,7 @@ const SensorData = ({ shouldRerender }: { shouldRerender: boolean }) => {
         <TableHeader>
           <TableRow>
             <TableHead>#</TableHead>
-            <TableHead>Sensor ID</TableHead>
+            <TableHead className="cursor-pointer flex items-center select-none" onClick={sort}>Sensor ID {descending ? <ChevronDown className='w-4'/> : <ChevronUp className='w-4'/>}</TableHead>
             <TableHead>Type</TableHead>
             <TableHead>Value</TableHead>
             <TableHead>Timestamp</TableHead>
